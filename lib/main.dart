@@ -1,15 +1,45 @@
 import 'package:flutter/material.dart';
 import './screens/public.dart';
 import './screens/dashboard.dart';
+import 'package:flutter/cupertino.dart';
 
-void main() => runApp(MyApp());
+import 'package:flutter/services.dart' show DeviceOrientation, SystemChrome;
+import './styles.dart';
+import './ios_app/screens/home.dart';
+
+void main() {
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  runApp(MyAppIOS());
+}
+
+class MyAppIOS extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoApp(
+      theme: CupertinoThemeData(
+        textTheme: CupertinoTextThemeData(
+          navLargeTitleTextStyle: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 70.0,
+            color: CupertinoColors.activeBlue,
+          ),
+        ),
+      ),
+      home: HomeScreen(),
+    );
+  }
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'NKODEX',
+      title: 'Calimax',
       routes: {
         '/public': (context) => Public(),
         '/dashboard': (context) => Dashboard()
@@ -26,7 +56,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.indigo,
       ),
-      home: MyHomePage(title: 'Nkodex'),
+      home: MyHomePage(title: 'Calimax'),
     );
   }
 }
