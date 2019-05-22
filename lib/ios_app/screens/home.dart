@@ -50,7 +50,7 @@ class _HomeScreenState extends State {
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.eye_solid),
-            title: Text('Vistas'),
+            title: Text('Detalles'),
           ),
         ],
       ),
@@ -59,7 +59,7 @@ class _HomeScreenState extends State {
           builder: (context) {
             return CupertinoPageScaffold(
               navigationBar: CupertinoNavigationBar(
-                middle: (index == 0) ? Text('Acticles') : Text('Views'),
+                middle: (index == 0) ? Text('Tarjetas Calimax') : Text('Detalles'),
               ),
               child: CardList(),
             );
@@ -102,7 +102,13 @@ class _HomeScreenState extends State {
         ),
         child: Row(
           children: <Widget>[
-            Container(height: 20, width: 50, color: Colors.green),
+            Container(
+              height: 20,
+              width: 50,
+              color: Colors.red,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(100.0))),
+            ),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12),
