@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       title: 'NKODEX',
       routes: {
         '/public': (context) => Public(),
-        '/dashboard': (context) => Dashboard()
+        '/dashboard': (context) => Dashboard(),
       },
       theme: ThemeData(
         // This is the theme of your application.
@@ -132,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         borderRadius: BorderRadius.circular(7),
                       ),
                       onPressed: () {
-                        Navigator.pushNamed(context, '/public');
+                        Navigator.pushNamed(context, '/dashboard');
                       },
                       child: Text('Iniciar'),
                     ),

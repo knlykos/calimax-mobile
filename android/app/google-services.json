@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1069404180672",
+    "firebase_url": "https://nkodex-1259.firebaseio.com",
+    "project_id": "nkodex-1259",
+    "storage_bucket": "nkodex-1259.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1069404180672:android:4c37a07bc01bcbed",
+        "android_client_info": {
+          "package_name": "com.nkodexsoft.restaurant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1069404180672-khdoeq8jdt82llappn4tkltg0c8a168a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7_-ey-lZOl5pthyWAVZPqVJBtTR47h6M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1069404180672-khdoeq8jdt82llappn4tkltg0c8a168a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
