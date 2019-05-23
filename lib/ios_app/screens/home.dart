@@ -19,8 +19,7 @@ class _HomeScreenState extends State {
   List<Spjs100> data;
 
   Future<List<Spjs100>> _fetchCards() async {
-    final token =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIzNSIsImlzc3VlciI6IkNteCIsInN1YmplY3QiOiJubG9wZXpnODdAZ21haWwuY29tIiwiYXVkaWVuY2UiOiJ3IiwiZXhwaXJlc0luIjoiMTJoIiwic2Vzc2lvbiI6MjczLCJhbGdvcml0aG0iOiJSUzI1NiIsImlhdCI6MTU1ODQ4MjE1Mn0.j0LlEqmvYhu4pOZr2QEz6NCXh4-93GH82x64P6N_jK0';
+    final token = await storage.read(key: 'token');
     final response = await http.post('https://calimaxjs.com/tarjetas',
         body: json.encode({
           "param_in": {'action': 'SL'},
@@ -59,7 +58,8 @@ class _HomeScreenState extends State {
           builder: (context) {
             return CupertinoPageScaffold(
               navigationBar: CupertinoNavigationBar(
-                middle: (index == 0) ? Text('Tarjetas Calimax') : Text('Detalles'),
+                middle:
+                    (index == 0) ? Text('Tarjetas Calimax') : Text('Detalles'),
               ),
               child: CardList(),
             );

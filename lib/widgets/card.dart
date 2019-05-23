@@ -5,6 +5,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+final storage = new FlutterSecureStorage();
 
 class CardList extends StatelessWidget {
   List<Color> colors = [
@@ -16,8 +19,7 @@ class CardList extends StatelessWidget {
   List<Spjs100> data;
 
   Future<List<Spjs100>> _fetchCards() async {
-    final token =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIzNSIsImlzc3VlciI6IkNteCIsInN1YmplY3QiOiJubG9wZXpnODdAZ21haWwuY29tIiwiYXVkaWVuY2UiOiJ3IiwiZXhwaXJlc0luIjoiMTJoIiwic2Vzc2lvbiI6Mjc1LCJhbGdvcml0aG0iOiJSUzI1NiIsImlhdCI6MTU1ODUxMzg4MH0.7LlLJf77qymhHUCxh2M1xplQUvT7Fpgixn87xq8W2sc';
+    final token = await storage.read(key: 'token');
     final response = await http.post('https://calimaxjs.com/tarjetas',
         body: json.encode({
           "param_in": {'action': 'SL'},

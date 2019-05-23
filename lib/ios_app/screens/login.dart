@@ -1,4 +1,11 @@
 import 'package:flutter/cupertino.dart';
+import 'package:mobile/ios_app/screens/home.dart';
+import 'package:mobile/models/user.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+final storage = new FlutterSecureStorage();
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -8,6 +15,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _focusNodeEmail = FocusNode();
   final _focusNodePassword = FocusNode();
+
+  final lusernameController = TextEditingController();
+  final lpasswordController = TextEditingController();
+  final susernameController = TextEditingController();
+  final spasswordController = TextEditingController();
 
   Color _getInputStyleColorEmail() {
     return _focusNodeEmail.hasFocus
@@ -19,6 +31,36 @@ class _LoginScreenState extends State<LoginScreen> {
     return _focusNodePassword.hasFocus
         ? CupertinoColors.activeGreen
         : CupertinoColors.inactiveGray;
+  }
+
+  void _login() {
+    Future<List<Usuario>> fetchPost() async {
+      final response = await http.post('https://calimaxjs.com/usuario',
+          body: json.encode({
+            'param_in': {
+              'action': 'LG',
+              'email': this.lusernameController.text,
+              'password': this.lpasswordController.text
+            },
+            'param_out': {'gettoken': ''},
+            'funcion': 'sp_usuario'
+          }),
+          headers: {'Content-type': 'application/json'});
+      var responseJson = (json.decode(response.body) as List)
+          .map((e) => Usuario.fromJson(e))
+          .toList();
+
+      print(responseJson[0].codigo);
+      if (responseJson[0].codigo == 0) {
+        storage.write(key: 'token', value: responseJson[0].token);
+        Navigator.pushNamed(context, '/home');
+        return responseJson;
+      } else {
+        print(responseJson[0].codigo);
+      }
+    }
+
+    fetchPost();
   }
 
   _onOnFocusNodeEvent() {
@@ -55,6 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Padding(
               padding: EdgeInsets.only(top: 20),
               child: CupertinoTextField(
+                controller: lusernameController,
                 focusNode: _focusNodeEmail,
                 prefix: Icon(
                   CupertinoIcons.mail,
@@ -76,6 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Padding(
               padding: EdgeInsets.only(top: 20),
               child: CupertinoTextField(
+                controller: lpasswordController,
                 focusNode: _focusNodePassword,
                 prefix: Icon(
                   CupertinoIcons.padlock,
@@ -92,15 +136,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           width: 0.0, color: _getInputStyleColorPassword())),
                 ),
                 placeholder: 'Contraseña',
+                obscureText: true,
               ),
             ),
             Padding(
               padding: EdgeInsets.only(top: 20),
               child: CupertinoButton.filled(
                 child: Text('Iniciar Sesión'),
-                onPressed: () {
-                  print('Iniciar');
-                },
+                onPressed: _login,
               ),
             )
           ],

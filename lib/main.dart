@@ -21,6 +21,10 @@ class MyAppIOS extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoApp(
+      routes: {
+        '/login': (context) => LoginScreen(),
+        '/home': (context) => HomeScreen()
+      },
       debugShowCheckedModeBanner: false,
       theme: CupertinoThemeData(
         textTheme: CupertinoTextThemeData(
