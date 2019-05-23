@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/ios_app/screens/login.dart';
 import './screens/public.dart';
 import './screens/dashboard.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,6 +21,7 @@ class MyAppIOS extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoApp(
+      debugShowCheckedModeBanner: false,
       theme: CupertinoThemeData(
         textTheme: CupertinoTextThemeData(
           navLargeTitleTextStyle: TextStyle(
@@ -29,7 +31,7 @@ class MyAppIOS extends StatelessWidget {
           ),
         ),
       ),
-      home: HomeScreen(),
+      home: LoginScreen(),
     );
   }
 }
