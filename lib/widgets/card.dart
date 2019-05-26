@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile/models/sp_js_100.dart';
+import 'package:calimax/models/sp_js_100.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
@@ -11,11 +11,12 @@ final storage = new FlutterSecureStorage();
 
 class CardList extends StatelessWidget {
   List<Color> colors = [
-    Color(int.parse('0xFF11C26D')),
-    Color(int.parse('0xFFF99D0A')),
-    Color(int.parse('0xFFF02A05')),
-    Color(int.parse('0xFF056BBA')),
+    Color(int.parse('0xFF0159AA')),
+    Color(int.parse('0xFF1287B5')),
+    Color(int.parse('0xFF281E55')),
+    Color(int.parse('0xFF60C4AF')),
   ];
+  Spjs100 spjs100 = Spjs100();
   List<Spjs100> data;
 
   Future<List<Spjs100>> _fetchCards() async {
@@ -52,31 +53,62 @@ class CardList extends StatelessWidget {
                 child: Stack(
                   children: <Widget>[
                     Positioned(
-                      bottom: 40,
-                      left: 30,
+                      top: 10,
+                      left: 15,
+                      child: Image.asset(
+                        'assets/images/logo-calimax.png',
+                        height: 30.0,
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 60,
+                      left: 28,
                       child: Text(
-                        snapshop.data[index].cuentaR,
+                        spjs100.obscureCuentaR(snapshop.data[index].cuentaR),
+                        style: TextStyle(
+                            color: Colors.white,
+                            letterSpacing: 3,
+                            fontWeight: FontWeight.w500),
                       ),
                     ),
                     Positioned(
                       top: 15,
-                      left: 30,
+                      right: 28,
                       child: snapshop.data[index].descTarjeta !=
                               'Tarjeta de Monedero'
                           ? Text(
-                              '\$' + snapshop.data[index].sdoVales.toString())
-                          : Text('\$' +
-                              snapshop.data[index].sdoMonedero.toString()),
+                              '\$' + snapshop.data[index].sdoVales.toString(),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700),
+                            )
+                          : Text(
+                              '\$' +
+                                  snapshop.data[index].sdoMonedero.toString(),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w700),
+                            ),
                     ),
                     Positioned(
-                      bottom: 15,
-                      left: 30,
+                      bottom: 40,
+                      left: 23,
+                      child: Text(
+                        snapshop.data[index].descTarjeta,
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 20,
+                      left: 23,
                       child: Text(
                         snapshop.data[index].nombre +
                             ' ' +
                             snapshop.data[index].apellidoP +
                             ' ' +
-                            snapshop.data[index].apellidoP,
+                            snapshop.data[index].apellidoM,
+                        style: TextStyle(color: Colors.white, fontSize: 14),
                       ),
                     ),
                   ],
@@ -89,12 +121,17 @@ class CardList extends StatelessWidget {
               );
             },
             itemCount: 3,
-            itemWidth: _screenSize.width * 0.7,
-            itemHeight: _screenSize.height * 0.25,
-            layout: SwiperLayout.STACK,
+            itemWidth: 300,
+            itemHeight: 185,
+            layout: SwiperLayout.TINDER,
+            onIndexChanged: (int i) {
+              print(snapshop.data[i].id);
+            },
           );
         } else {
-          return Text('Hola');
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
         }
       },
     );

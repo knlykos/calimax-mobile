@@ -1,4 +1,4 @@
-name: mobile
+name: calimax
 description: A new Flutter project.
 
 # The following defines the version and build number for your application.
@@ -25,6 +25,7 @@ dependencies:
   flip_card: ^0.2.1
   scoped_model: ^1.0.1
   flutter_swiper: ^1.1.6
+  intl: ^0.15.8
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -49,7 +50,7 @@ flutter:
   assets:
     - assets/images/mainpage.png
     - assets/images/nkodex-logo.png
-    - assets/images/calimax.png
+    - assets/images/logo-calimax.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

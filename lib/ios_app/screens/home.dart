@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:mobile/models/sp_js_100.dart';
+
+import 'package:calimax/models/sp_js_100.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:calimax/data/sp_js_110.dart';
 import 'dart:convert';
 import 'dart:async';
+import 'package:intl/intl.dart';
 
-import 'package:mobile/widgets/card.dart';
+import 'package:calimax/widgets/card.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 final storage = new FlutterSecureStorage();
 
@@ -17,6 +20,25 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State {
   List<Spjs100> data;
+  List<Spjs110> movimientos;
+
+  Future<List<Spjs110>> _fetchMovimientos() async {
+    final token = await storage.read(key: 'token');
+    final response = await http.post('https://calimaxjs.com/tarjetas',
+        body: json.encode({
+          'param_in': {'action': 'SL', 'cardNo': '258', 'no_meses': 6},
+          'param_out': {},
+          'funcion': 'sp_js_110'
+        }),
+        headers: {
+          'Content-type': 'application/json',
+          'Authorization': 'Bearer $token'
+        });
+    var responseJson = (json.decode(response.body) as List)
+        .map((e) => Spjs110.fromJson(e))
+        .toList();
+    return responseJson;
+  }
 
   Future<List<Spjs100>> _fetchCards() async {
     final token = await storage.read(key: 'token');
@@ -40,104 +62,155 @@ class _HomeScreenState extends State {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoTabScaffold(
-      tabBar: CupertinoTabBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.tags_solid),
-            title: Text('Tarjetas'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.eye_solid),
-            title: Text('Detalles'),
-          ),
-        ],
+    return CupertinoPageScaffold(
+      resizeToAvoidBottomInset: true,
+      // tabBar: CupertinoTabBar(
+      //   items: [
+      //     BottomNavigationBarItem(
+      //       icon: Icon(CupertinoIcons.tags_solid),
+      //       title: Text('Tarjetas'),
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(CupertinoIcons.eye_solid),
+      //       title: Text('Detalles'),
+      //     ),
+      //   ],
+      // ),
+      // tabBuilder: (context, index) {
+      //   return CupertinoTabView(
+      //     builder: (context) {
+      //       return CupertinoPageScaffold(
+      //         navigationBar: CupertinoNavigationBar(
+      //           middle:
+      //               (index == 0) ? Text('Tarjetas Calimax') : Text('Detalles'),
+      //         ),
+      //         child: CardList(),
+      //       );
+      //     },
+      //   );
+      // },
+      navigationBar: CupertinoNavigationBar(
+        transitionBetweenRoutes: true,
+        middle: Text('Calimax'),
+        automaticallyImplyLeading: false,
       ),
-      tabBuilder: (context, index) {
-        return CupertinoTabView(
-          builder: (context) {
-            return CupertinoPageScaffold(
-              navigationBar: CupertinoNavigationBar(
-                middle:
-                    (index == 0) ? Text('Tarjetas Calimax') : Text('Detalles'),
-              ),
+      child: Container(
+        margin: EdgeInsets.only(top: 68),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
               child: CardList(),
-            );
-          },
-        );
-      },
+            ),
+            Expanded(
+              child: _movList(),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget _list() {
+  final List<Widget> opciones = [];
+  Widget _movList() {
     return FutureBuilder(
-      future: _fetchCards(),
-      initialData: this.data,
-      builder: (BuildContext context, AsyncSnapshot<List<Spjs100>> snapshop) {
+      future: _fetchMovimientos(),
+      initialData: this.movimientos,
+      builder: (BuildContext context, AsyncSnapshot<List<Spjs110>> snapshop) {
         if (snapshop.connectionState == ConnectionState.done) {
-          return ListView(
-            children: _listaItems(snapshop.data),
+          return ScopedModel<Spjs110>(
+            model: Spjs110(),
+            child: CupertinoScrollbar(
+              child: ListView(
+                children: _listaItems(snapshop.data),
+              ),
+            ),
           );
         } else {
-          return Text('Hola');
+          return CupertinoActivityIndicator();
         }
       },
     );
   }
 
-  List<Widget> _listaItems(List<Spjs100> data) {
-    final List<Widget> opciones = [];
+  // Widget _list() {
+  //   return FutureBuilder(
+  //     future: _fetchCards(),
+  //     initialData: this.data,
+  //     builder: (BuildContext context, AsyncSnapshot<List<Spjs100>> snapshop) {
+  //       if (snapshop.connectionState == ConnectionState.done) {
+  //         return ListView(
+  //           children: _listaItems(snapshop.data),
+  //         );
+  //       } else {
+  //         return Center(
+  //           child: CupertinoActivityIndicator(),
+  //         );
+  //       }
+  //     },
+  //   );
+  // }
 
+  final formatted = new DateFormat('yyyy-MM-dd');
+  List<Widget> _listaItems(List<Spjs110> data) {
+    final List<Widget> opciones = [];
     data.forEach((opt) {
-      print(opt.descTarjeta);
-      print(opt.sdoMonedero);
       final widgetTemp = SafeArea(
-        top: false,
-        bottom: false,
-        minimum: EdgeInsets.only(
-          left: 16,
-          top: 8,
-          bottom: 8,
-          right: 8,
-        ),
-        child: Row(
-          children: <Widget>[
-            Container(
-              height: 20,
-              width: 50,
-              color: Colors.red,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(100.0))),
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(opt.descTarjeta),
-                    opt.descTarjeta != 'Tarjeta de Monedero'
-                        ? Text('\$' + opt.sdoVales.toString())
-                        : Text('\$' + opt.sdoMonedero.toString()),
-                  ],
+        child: Container(
+          decoration: BoxDecoration(
+            color: CupertinoColors.white,
+            boxShadow: [],
+          ),
+          margin: EdgeInsets.only(top: 10),
+          padding: EdgeInsets.only(left: 10, right: 10),
+          height: 40,
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                left: 0,
+                child: Icon(
+                  opt.importe > 0
+                      ? CupertinoIcons.up_arrow
+                      : CupertinoIcons.down_arrow,
+                  color: opt.importe > 0
+                      ? CupertinoColors.activeGreen
+                      : CupertinoColors.destructiveRed,
                 ),
               ),
-            ),
-            CupertinoButton(
-              padding: EdgeInsets.zero,
-              child: Icon(
-                CupertinoIcons.plus_circled,
-                semanticLabel: 'Add',
+              Positioned(
+                left: 30,
+                child: Text(opt.descripcion),
               ),
-              onPressed: () {
-                print('Se apreto el boton');
-              },
-            )
-          ],
+              Positioned(
+                left: 30,
+                bottom: 0,
+                child: Text(
+                  formatted.format(opt.fecha),
+                  style: TextStyle(fontSize: 14),
+                ),
+              ),
+              Positioned(
+                right: 0,
+                child: Text(
+                  '\$' + opt.saldo.toString(),
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Text(
+                  '\$' + opt.importe.toString(),
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: opt.importe > 0
+                          ? CupertinoColors.activeGreen
+                          : CupertinoColors.destructiveRed),
+                ),
+              ),
+            ],
+          ),
         ),
       );
-
       opciones..add(widgetTemp);
     });
 
