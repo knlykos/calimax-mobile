@@ -8,11 +8,26 @@ import 'dart:convert';
 class AppState extends Model {
   List<Spjs100> _spjs100;
 
-  List<Spjs110> _spjs110;
+  List<Spjs110> spjs110;
 
   final storage = new FlutterSecureStorage();
 
-  void _fetchMovimientos(int id) async {
+  List<Spjs110> get movimientos {
+    print(this.spjs110[0].codigo);
+    return this.spjs110;
+  }
+
+  int getMovimientosCount() {
+    return spjs110.length;
+  }
+
+  void movimientosToZero() {
+    this.spjs110 = [];
+    notifyListeners();
+  }
+
+  void fetchMovimientos(int id) async {
+    print('Llamado');
     final token = await storage.read(key: 'token');
     final response = await http.post('https://calimaxjs.com/tarjetas',
         body: json.encode({
@@ -27,7 +42,8 @@ class AppState extends Model {
     var responseJson = (json.decode(response.body) as List)
         .map((e) => Spjs110.fromJson(e))
         .toList();
-    this._spjs110 = responseJson;
+    this.spjs110 = responseJson;
+    print(this.spjs110[0].descripcion);
     notifyListeners();
   }
 }

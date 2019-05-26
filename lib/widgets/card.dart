@@ -1,3 +1,4 @@
+import 'package:calimax/data/sp_js_110.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:calimax/models/sp_js_100.dart';
@@ -6,6 +7,8 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:calimax/data/app_state.dart';
 
 final storage = new FlutterSecureStorage();
 
@@ -125,7 +128,9 @@ class CardList extends StatelessWidget {
             itemHeight: 185,
             layout: SwiperLayout.TINDER,
             onIndexChanged: (int i) {
-              print(snapshop.data[i].id);
+              // ScopedModel.of<AppState>(context).movimientosToZero();
+              ScopedModel.of<AppState>(context)
+                  .fetchMovimientos(snapshop.data[i].id);
             },
           );
         } else {
