@@ -1,9 +1,13 @@
+import 'dart:convert';
+
+import 'package:mobile/models/rutas.dart';
+
 class Usuario {
   String idUsu;
   String usuario;
   String email;
   int estado;
-  String ruta;
+  List ruta;
   String permisos;
   int statuscode;
   int codigo;
@@ -22,17 +26,17 @@ class Usuario {
       this.mensaje,
       this.token});
 
-  Usuario.fromJson(Map<String, dynamic> json) {
-    idUsu = json['id_usu'];
-    usuario = json['usuario'];
-    email = json['email'];
-    estado = json['estado'];
-    ruta = json['ruta'];
-    permisos = json['permisos'];
-    statuscode = json['statuscode'];
-    codigo = json['codigo'];
-    mensaje = json['mensaje'];
-    token = json['token'];
+  Usuario.fromJson(Map<String, dynamic> jsonMap) {
+    idUsu = jsonMap['id_usu'];
+    usuario = jsonMap['usuario'];
+    email = jsonMap['email'];
+    estado = jsonMap['estado'];
+    ruta = new List.from(jsonMap['ruta']);
+    permisos = jsonMap['permisos'];
+    statuscode = jsonMap['statuscode'];
+    codigo = jsonMap['codigo'];
+    mensaje = jsonMap['mensaje'];
+    token = jsonMap['token'];
   }
 
   Map<String, dynamic> toJson() {
